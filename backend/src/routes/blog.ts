@@ -76,7 +76,7 @@ blogRouter.put('/',async(c)=>{
 
   }).$extends(withAccelerate());
 
-  const post = await prisma.post.update({
+  const blog = await prisma.post.update({
     where:{
       id:body.id
     },
@@ -87,7 +87,7 @@ blogRouter.put('/',async(c)=>{
     }
   });
     return c.json({
-      id:post.id
+      id:blog.id
     });
 })
 
@@ -100,22 +100,23 @@ blogRouter.get('/bulk',async(c)=>{
   return c.json({
     blog
   })
-})
+});
 
-blogRouter.get('/',async(c)=>{
-  const body = await c.req.json();
+blogRouter.get('/:id',async(c)=>{
+  // const body = await c.req.json();
+  const id =  c.req.param("id");
   const prisma = new PrismaClient({
     datasourceUrl:c.env.DATABASE_URL,
   }).$extends(withAccelerate());
  try{
 
-  const post = await prisma.post.findFirst({
+  const blog = await prisma.post.findFirst({
     where:{
-      id:body.id
+      id:id,
     }
   })
     return c.json({
-      post
+      blog
     });
  }catch(error){
   c.status(411);
